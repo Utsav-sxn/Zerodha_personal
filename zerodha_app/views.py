@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse,HttpResponse
 import yfinance as yf
+from openai import OpenAI
 # import mplfinance as mpf
 # import pandas as pd
 # from io import BytesIO
@@ -27,14 +28,30 @@ def generate_stock_graph(request,symbol,start='2024-10-20',end='2024-12-20'):
         'close': close_values,
     }]
 
-    layout = {
-        'xaxis': {'title': 'Date'},
-        'yaxis': {'title': 'Price'},
-        'xaxis_rangeslider_visible': False
-    }
+    return JsonResponse({'data': fig_data})
 
-    return JsonResponse({'data': fig_data, 'layout': layout, 'symbol':symbol})
 
+
+def chatBot(request,question):
+    client = OpenAI(api_key="YOUR_API_KEY")
+    try:
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role":"system",
+                    'content':'You are a helpful assistant. Answer about stocks and their symbols.Suggest symbols other than these - sensex,nifty,AAPL,AMZN,RELI,INTC,NVDA,F,TSLA,META,MSFT,GOOG'
+                },
+                {
+                    'role':'user',
+                    'content':question
+                },
+            ]
+        )
+        response = completion.choices[0].message.content
+        return JsonResponse({'answer':response})
+    except Exception as e:
+        return JsonResponse({'error':str(e)},status=500)
 
 
 
