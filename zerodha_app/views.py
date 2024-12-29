@@ -1,18 +1,12 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse,HttpResponse
 import yfinance as yf
-# import mplfinance as mpf
-# import pandas as pd
-# from io import BytesIO
-# import plotly.graph_objects as go
-# from datetime import date
+from openai import OpenAI
 
 
 def generate_stock_graph(request,symbol,start='2024-10-20',end='2024-12-20'):
-    # Download stock data using yfinance
     data = yf.download(symbol, start=start, end=end)
 
-    # Prepare the data for Plotly
     open_values = data['Open'].values.tolist()
     high_values = data['High'].values.tolist()
     low_values = data['Low'].values.tolist()
@@ -26,15 +20,30 @@ def generate_stock_graph(request,symbol,start='2024-10-20',end='2024-12-20'):
         'low': low_values,
         'close': close_values,
     }]
+    return JsonResponse({'data': fig_data})
 
-    layout = {
-        'xaxis': {'title': 'Date'},
-        'yaxis': {'title': 'Price'},
-        'xaxis_rangeslider_visible': False
-    }
 
-    return JsonResponse({'data': fig_data, 'layout': layout, 'symbol':symbol})
 
+def chatBot(request,question):
+    client = OpenAI(api_key="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")
+    try:
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role":"system",
+                    'content':'You are a helpful assistant. Answer about stocks and their symbols.Suggest symbols other than these - sensex,nifty,AAPL,AMZN,RELI,INTC,NVDA,F,TSLA,META,MSFT,GOOG'
+                },
+                {
+                    'role':'user',
+                    'content':question
+                },
+            ]
+        )
+        response = completion.choices[0].message.content
+        return JsonResponse({'answer':response})
+    except Exception as e:
+        return JsonResponse({'error':str(e)},status=500)
 
 
 
