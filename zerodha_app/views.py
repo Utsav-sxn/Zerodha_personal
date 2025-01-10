@@ -2,23 +2,18 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse,HttpResponse
 import yfinance as yf
 from openai import OpenAI
-# import mplfinance as mpf
-# import pandas as pd
-# from io import BytesIO
-# import plotly.graph_objects as go
-# from datetime import date
+from . import models
 
 
-def generate_stock_graph(request,symbol,start='2024-10-20',end='2024-12-20'):
-    # Download stock data using yfinance
-    data = yf.download(symbol, start=start, end=end)
+def generate_stock_graph(request,symbol,start='2024-08-30',end='2024-12-30'):
 
-    # Prepare the data for Plotly
-    open_values = data['Open'].values.tolist()
-    high_values = data['High'].values.tolist()
-    low_values = data['Low'].values.tolist()
-    close_values = data['Close'].values.tolist()
-    dates = data.index.strftime('%Y-%m-%d').tolist()
+    data = models.stock_data.objects.filter(Ticker = symbol, Date__range = [start,end])
+
+    open_values = [entry.Open for entry in data]
+    high_values = [entry.High for entry in data]
+    low_values = [entry.Low for entry in data]
+    close_values = [entry.Close for entry in data]
+    dates = [entry.Date.strftime('%Y-%m-%d') for entry in data]
 
     fig_data = [{
         'x': dates,
@@ -92,10 +87,10 @@ def home(request):
 
         AAPLdata = getData('AAPL')
         AMZNdata = getData('AMZN')
-        RELIdata = getData('RELI')
-        INTCdata = getData('INTC')
+        NFLXdata = getData('NFLX')
+        BRKBdata = getData('BRK-B')
         NVDAdata = getData('NVDA')
-        Fdata = getData('F')
+        JPMdata = getData('JPM')
         TSLAdata = getData('TSLA')
         METAdata = getData('META')
         MSFTdata = getData('MSFT')
@@ -108,20 +103,20 @@ def home(request):
             'nifty_diff':nifty_diff,
             'AAPL':AAPLdata['val'],
             'AMZN':AMZNdata['val'],
-            'RELI':RELIdata['val'],
-            'INTC':INTCdata['val'],
+            'BRKB':BRKBdata['val'],
+            'NFLX':NFLXdata['val'],
             'NVDA':NVDAdata['val'],
-            'F':Fdata['val'],
+            'JPM':JPMdata['val'],
             'TSLA':TSLAdata['val'],
             'META':METAdata['val'],
             'MSFT':MSFTdata['val'],
             'GOOG':GOOGdata['val'],
             'AAPLdiff':AAPLdata['diff'],
             'AMZNdiff':AMZNdata['diff'],
-            'RELIdiff':RELIdata['diff'],
-            'INTCdiff':INTCdata['diff'],
+            'NFLXdiff':NFLXdata['diff'],
+            'BRKBdiff':BRKBdata['diff'],
             'NVDAdiff':NVDAdata['diff'],
-            'Fdiff':Fdata['diff'],
+            'JPMdiff':JPMdata['diff'],
             'TSLAdiff':TSLAdata['diff'],
             'METAdiff':METAdata['diff'],
             'MSFTdiff':MSFTdata['diff'],

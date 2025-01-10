@@ -42,9 +42,10 @@
     <section class="stocks">
         <form action="" method="post" id="stockForm">
             {% csrf_token %}
-            <input type="text" name="stockSym" id="customSym" placeholder="Enter Stock Name" autocomplete="off">
-            <button type="submit" id="customSearch"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search</button>
-        </form>
+            <h3 id="stock_list_h3" class="raleway-action">STOCK LIST</h3>
+            <!-- <input type="text" name="stockSym" id="customSym" placeholder="Enter Stock Name" autocomplete="off">
+            <button type="submit" id="customSearch"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search</button> -->
+        </form> 
         <ul class="stock-list">
             {% if AAPLdiff < 0 %}
             <li class="Bearish">
@@ -62,21 +63,21 @@
                 <a href="javascript:void(0);" onclick="generateGraph('AMZN')">AMZN</a>
                 <p><data class="Br-Bl-diff">{{AMZNdiff|floatformat:4}}</data>&nbsp;&nbsp;{{AMZN|floatformat:4 }}</p>
             </li>
-            {% if RELIdiff < 0 %}
+            {% if NFLXdiff < 0 %}
             <li class="Bearish">
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('RELI')">RELI</a>
-                <p><data class="Br-Bl-diff">{{RELIdiff|floatformat:4}}</data>&nbsp;&nbsp;{{RELI|floatformat:4 }}</p>
+                <a href="javascript:void(0);" onclick="generateGraph('NFLX')">NFLX</a>
+                <p><data class="Br-Bl-diff">{{NFLXdiff|floatformat:4}}</data>&nbsp;&nbsp;{{NFLX|floatformat:4 }}</p>
             </li>
-            {% if INTCdiff < 0 %}
+            {% if BRKBdiff < 0 %}
             <li class="Bearish">
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('INTC')">INTC</a>
-                <p><data class="Br-Bl-diff">{{INTCdiff|floatformat:4}}</data>&nbsp;&nbsp;{{INTC|floatformat:4 }}</p>
+                <a href="javascript:void(0);" onclick="generateGraph('BRK-B')">BRK-B</a>
+                <p><data class="Br-Bl-diff">{{BRKBdiff|floatformat:4}}</data>&nbsp;&nbsp;{{BRKB|floatformat:4 }}</p>
             </li>
             {% if NVDAdiff < 0 %}
             <li class="Bearish">
@@ -86,13 +87,13 @@
                 <a href="javascript:void(0);" onclick="generateGraph('NVDA')">NVDA</a>
                 <p><data class="Br-Bl-diff">{{NVDAdiff|floatformat:4}}</data>&nbsp;&nbsp;{{NVDA|floatformat:4 }}</p>
             </li>
-            {% if Fdiff < 0 %}
+            {% if JPMdiff < 0 %}
             <li class="Bearish">
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('F')">F</a>
-                <p><data class="Br-Bl-diff">{{Fdiff|floatformat:4}}</data>&nbsp;&nbsp;{{F|floatformat:4 }}</p>
+                <a href="javascript:void(0);" onclick="generateGraph('JPM')">JPM</a>
+                <p><data class="Br-Bl-diff">{{JPMdiff|floatformat:4}}</data>&nbsp;&nbsp;{{JPM|floatformat:4 }}</p>
             </li>
             {% if TSLAdiff < 0 %}
             <li class="Bearish">
@@ -123,11 +124,11 @@
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('GOOG')">GOOG</a>
+                <a href="javascript:void(0);" onclick="generateGraph('GOOGL')">GOOGL</a>
                 <p><data class="Br-Bl-diff">{{GOOGdiff|floatformat:4}}</data>&nbsp;&nbsp;{{GOOG|floatformat:4 }}</p>
             </li>
         </ul>
-        <div class="chatBot">
+        <div class="chatBot" style="display: none;">
             <h4>STOCK INFO</h4>
             <div class="chat"></div>
             <div id="loading" class="loading" style="display: none;">Loading...</div>
@@ -136,20 +137,20 @@
                 <button type="submit" id="btnChat">&uarr;</button>
             </form>
         </div>
-        <button type="button" class="ai-button">AI Support</button>
+        <button type="button" class="ai-button" style="display: none;">AI Support</button>
     </section>
     <main>
         <section id="graphAttrs" >
             <input type="text" id="SymValue" style="text-align: center;" value="Stock">
-            <select name="graph-type" id="graph-type">
+            <select name="graph-type" id="graph-type" class="raleway-action">
                 <option value="candle">candle</option>
                 <option value="ohlc">ohlc</option>
                 <option value="line">line</option>
             </select>
-            <label for="startDate">Start Date:</label>
-            <input type="date" name="startDate" id="start-date" value='2024-10-20'>
-            <label for="endDate">End Date:</label>
-            <input type="date" name="endDate" id="end-date" value='2024-12-20'>
+            <label for="startDate" class="raleway-action">Start Date:</label>
+            <input type="date" name="startDate" id="start-date" value='2024-08-30'>
+            <label for="endDate" class="raleway-action">End Date:</label>
+            <input type="date" name="endDate" id="end-date" value='2024-12-30'>
         </section>
         <div id="stockGraph" class="fillContent">
         </div>
@@ -194,7 +195,7 @@
 
         const graphDiv = document.getElementById('stockGraph');
         document.addEventListener('DOMContentLoaded', () => {
-            generateGraph('^NSEI') // NIFTY 50 graph on re/load
+            generateGraph('^NSEI')
         });
 
 
@@ -202,11 +203,12 @@
 
         function generateGraph(symbol) {
         document.getElementById('SymValue').value = symbol;
+
         // getting start and end date for graph
         StartDatefunc();
         EndDatefunc();
         fetch(`/stock-graph/${symbol}/${StartDate}/${EndDate}`)
-            .then(response => response.json()) // fetching json response from backend
+            .then(response => response.json())
             .then(data => {
                 if (data && data.data && data.data.length > 0) {
 
@@ -218,7 +220,7 @@
         const lowValues = data.data[0].low.flat();
         const openValues = data.data[0].open.flat();
         const dates = data.data[0].x;
-        
+
         // selecting graph type
         const graphType = document.getElementById('graph-type').value
 
@@ -285,7 +287,7 @@
     }
     })
     .catch(error => {
-    console.error('Error fetching stock graph:', error);
+    console.error('Error fetching stock graph,May be due to unexpected Ticker or date range:', error);
     });
 }
 
@@ -311,58 +313,58 @@
 
 
     // CHATBOT 
-    const chatArea = document.getElementsByClassName('chat')[0];
-    var message;
-    var question;
-    async function chatbot() {
-        const input = document.getElementById('chatBox'); // Get input value
-        question = input.value;
-        input.value = '';
-        const loadingElement = document.getElementById('loading');
-        loadingElement.style.display = 'block';
-        try {
-            const response = await fetch(`/chatbot/${encodeURIComponent(question)}`);
-            const data = await response.json();
-            data.answer = data.answer.replace(/\*/g, '');
-            message = data.answer;
-            loadingElement.style.display = 'none';
-        }
-        catch (error) {
-            console.error('Error fetching Response:', error);
-            message = 'Sorry, there was an error processing your request.';
-            loadingElement.style.display = 'none';
-        }
+    // const chatArea = document.getElementsByClassName('chat')[0];
+    // var message;
+    // var question;
+    // async function chatbot() {
+    //     const input = document.getElementById('chatBox'); // Get input value
+    //     question = input.value;
+    //     input.value = '';
+    //     const loadingElement = document.getElementById('loading');
+    //     loadingElement.style.display = 'block';
+    //     try {
+    //         const response = await fetch(`/chatbot/${encodeURIComponent(question)}`);
+    //         const data = await response.json();
+    //         data.answer = data.answer.replace(/\*/g, '');
+    //         message = data.answer;
+    //         loadingElement.style.display = 'none';
+    //     }
+    //     catch (error) {
+    //         console.error('Error fetching Response:', error);
+    //         message = 'Sorry, there was an error processing your request.';
+    //         loadingElement.style.display = 'none';
+    //     }
 
-        const resp = document.createElement('p');
-        resp.innerHTML = message;
-        resp.classList.add('resp');
-        chatArea.appendChild(resp);
-        }
+    //     const resp = document.createElement('p');
+    //     resp.innerHTML = message;
+    //     resp.classList.add('resp');
+    //     chatArea.appendChild(resp);
+    //     }
 
-    const chatBtn = document.getElementById('btnChat');
+    // const chatBtn = document.getElementById('btnChat');
 
-    chatBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const req = document.createElement('p');
-        question = document.getElementById('chatBox').value
-        req.innerHTML = question;
-        req.classList.add('req');
-        chatArea.appendChild(req);
-        chatbot();
-    })
+    // chatBtn.addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     const req = document.createElement('p');
+    //     question = document.getElementById('chatBox').value
+    //     req.innerHTML = question;
+    //     req.classList.add('req');
+    //     chatArea.appendChild(req);
+    //     chatbot();
+    // })
 
 
-    const AiSupport = document.getElementsByClassName('ai-button')[0]; // AI Support Button
-    const AiChat =  document.getElementsByClassName('chatBot')[0];  // Chat Div
-    AiSupport.addEventListener('click',()=>{
-        if(AiSupport.innerHTML==='AI Support'){
-            AiSupport.innerHTML= 'Close Chat';
-            AiChat.style.display = 'flex';
-        }else{
-            AiSupport.innerHTML= 'AI Support';
-            AiChat.style.display = 'none'; 
-        }
-    })
+    // const AiSupport = document.getElementsByClassName('ai-button')[0]; // AI Support Button
+    // const AiChat =  document.getElementsByClassName('chatBot')[0];  // Chat Div
+    // AiSupport.addEventListener('click',()=>{
+    //     if(AiSupport.innerHTML==='AI Support'){
+    //         AiSupport.innerHTML= 'Close Chat';
+    //         AiChat.style.display = 'flex';
+    //     }else{
+    //         AiSupport.innerHTML= 'AI Support';
+    //         AiChat.style.display = 'none'; 
+    //     }
+    // })
     </script>
 </body>
 </html>
