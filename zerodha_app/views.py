@@ -84,10 +84,10 @@ def home(request):
 
         AAPLdata = getData('AAPL')
         AMZNdata = getData('AMZN')
-        RELIdata = getData('RELI')
-        INTCdata = getData('INTC')
+        NFLXdata = getData('NFLX')
+        BRKBdata = getData('BRK-B')
         NVDAdata = getData('NVDA')
-        Fdata = getData('F')
+        JPMdata = getData('JPM')
         TSLAdata = getData('TSLA')
         METAdata = getData('META')
         MSFTdata = getData('MSFT')
@@ -100,20 +100,20 @@ def home(request):
             'nifty_diff':nifty_diff,
             'AAPL':AAPLdata['val'],
             'AMZN':AMZNdata['val'],
-            'RELI':RELIdata['val'],
-            'INTC':INTCdata['val'],
+            'BRKB':BRKBdata['val'],
+            'NFLX':NFLXdata['val'],
             'NVDA':NVDAdata['val'],
-            'F':Fdata['val'],
+            'JPM':JPMdata['val'],
             'TSLA':TSLAdata['val'],
             'META':METAdata['val'],
             'MSFT':MSFTdata['val'],
             'GOOG':GOOGdata['val'],
             'AAPLdiff':AAPLdata['diff'],
             'AMZNdiff':AMZNdata['diff'],
-            'RELIdiff':RELIdata['diff'],
-            'INTCdiff':INTCdata['diff'],
+            'NFLXdiff':NFLXdata['diff'],
+            'BRKBdiff':BRKBdata['diff'],
             'NVDAdiff':NVDAdata['diff'],
-            'Fdiff':Fdata['diff'],
+            'JPMdiff':JPMdata['diff'],
             'TSLAdiff':TSLAdata['diff'],
             'METAdiff':METAdata['diff'],
             'MSFTdiff':MSFTdata['diff'],

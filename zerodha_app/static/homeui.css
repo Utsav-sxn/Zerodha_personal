@@ -13,6 +13,7 @@
 /* BODY */
 body {
     overflow: hidden;
+    overflow: hidden;
 }
 
 * {
@@ -102,11 +103,20 @@ nav {
     width: 28%;
 }
 
+#stock_list_h3{
+    width: auto;
+    margin: auto;
+    font-size: larger;
+    font-weight: 500;
+    color: #ff6939;
+}
+
 #stockForm{
     display: flex;
     justify-content:space-between;
     height: 1.5rem;
     margin: 0.3rem 0 .3rem 0;
+    border-right: 1px solid #45403f2b;
 }
 
 #customSym{
@@ -142,6 +152,7 @@ nav {
     flex-direction: column;
     width: 100%;
     font-weight: 400;
+    margin-bottom: 10rem;
     margin-bottom: 10rem;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -184,6 +195,7 @@ main>section>select {
     width: 100%;
     border-bottom: 1px solid #45403f2b;
     display: block;
+    display: block;
 }
 
 
@@ -211,24 +223,28 @@ main>section>select {
 .Bullish>a,
 .Bullish>p {
     color: green;
+    align-self: center;
 }
 
-.Bullish>p::after {
+.Bullish>p>data::after {
     font-family: 'Material Symbols Outlined';
     content: '\00a0 stat_2';
     vertical-align: middle;
+    color: green;
 }
 
 
 .Bearish>a,
 .Bearish>p {
     color: red;
+    align-self: center;
 }
 
-.Bearish>p::after {
+.Bearish>p>data::after {
     font-family: 'Material Symbols Outlined';
     content: '\00a0 stat_minus_2';
     vertical-align: middle;
+    color: red;
 }
 
 

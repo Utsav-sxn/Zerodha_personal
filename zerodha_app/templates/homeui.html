@@ -42,9 +42,10 @@
     <section class="stocks">
         <form action="" method="post" id="stockForm">
             {% csrf_token %}
-            <input type="text" name="stockSym" id="customSym" placeholder="Enter Stock Name" autocomplete="off">
-            <button type="submit" id="customSearch"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search</button>
-        </form>
+            <h3 id="stock_list_h3" class="raleway-action">STOCK LIST</h3>
+            <!-- <input type="text" name="stockSym" id="customSym" placeholder="Enter Stock Name" autocomplete="off">
+            <button type="submit" id="customSearch"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;Search</button> -->
+        </form> 
         <ul class="stock-list">
             {% if AAPLdiff < 0 %}
             <li class="Bearish">
@@ -62,21 +63,21 @@
                 <a href="javascript:void(0);" onclick="generateGraph('AMZN')">AMZN</a>
                 <p><data class="Br-Bl-diff">{{AMZNdiff|floatformat:4}}</data>&nbsp;&nbsp;{{AMZN|floatformat:4 }}</p>
             </li>
-            {% if RELIdiff < 0 %}
+            {% if NFLXdiff < 0 %}
             <li class="Bearish">
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('RELI')">RELI</a>
-                <p><data class="Br-Bl-diff">{{RELIdiff|floatformat:4}}</data>&nbsp;&nbsp;{{RELI|floatformat:4 }}</p>
+                <a href="javascript:void(0);" onclick="generateGraph('NFLX')">NFLX</a>
+                <p><data class="Br-Bl-diff">{{NFLXdiff|floatformat:4}}</data>&nbsp;&nbsp;{{NFLX|floatformat:4 }}</p>
             </li>
-            {% if INTCdiff < 0 %}
+            {% if BRKBdiff < 0 %}
             <li class="Bearish">
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('INTC')">INTC</a>
-                <p><data class="Br-Bl-diff">{{INTCdiff|floatformat:4}}</data>&nbsp;&nbsp;{{INTC|floatformat:4 }}</p>
+                <a href="javascript:void(0);" onclick="generateGraph('BRK-B')">BRK-B</a>
+                <p><data class="Br-Bl-diff">{{BRKBdiff|floatformat:4}}</data>&nbsp;&nbsp;{{BRKB|floatformat:4 }}</p>
             </li>
             {% if NVDAdiff < 0 %}
             <li class="Bearish">
@@ -86,13 +87,13 @@
                 <a href="javascript:void(0);" onclick="generateGraph('NVDA')">NVDA</a>
                 <p><data class="Br-Bl-diff">{{NVDAdiff|floatformat:4}}</data>&nbsp;&nbsp;{{NVDA|floatformat:4 }}</p>
             </li>
-            {% if Fdiff < 0 %}
+            {% if JPMdiff < 0 %}
             <li class="Bearish">
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('F')">F</a>
-                <p><data class="Br-Bl-diff">{{Fdiff|floatformat:4}}</data>&nbsp;&nbsp;{{F|floatformat:4 }}</p>
+                <a href="javascript:void(0);" onclick="generateGraph('JPM')">JPM</a>
+                <p><data class="Br-Bl-diff">{{JPMdiff|floatformat:4}}</data>&nbsp;&nbsp;{{JPM|floatformat:4 }}</p>
             </li>
             {% if TSLAdiff < 0 %}
             <li class="Bearish">
@@ -123,7 +124,7 @@
             {% else %}
             <li class="Bullish">
             {% endif %}
-                <a href="javascript:void(0);" onclick="generateGraph('GOOG')">GOOG</a>
+                <a href="javascript:void(0);" onclick="generateGraph('GOOGL')">GOOGL</a>
                 <p><data class="Br-Bl-diff">{{GOOGdiff|floatformat:4}}</data>&nbsp;&nbsp;{{GOOG|floatformat:4 }}</p>
             </li>
         </ul>
@@ -141,7 +142,7 @@
     <main>
         <section id="graphAttrs" >
             <input type="text" id="SymValue" style="text-align: center;" value="Stock">
-            <select name="graph-type" id="graph-type">
+            <select name="graph-type" id="graph-type" class="raleway-action">
                 <option value="candle">candle</option>
                 <option value="ohlc">ohlc</option>
                 <option value="line">line</option>
@@ -158,6 +159,7 @@
     <script src="https://kit.fontawesome.com/2736a647ec.js" crossorigin="anonymous"></script>
     <script>
 
+        // TOGGLE ACTIVE (orange color) IN NAVBAR
         // TOGGLE ACTIVE (orange color) IN NAVBAR
 
         document.querySelectorAll('.Navpage').forEach((item)=>{
@@ -199,6 +201,7 @@
 
 
         // Generating GRAPH
+        // Generating GRAPH
 
         function generateGraph(symbol) {
         document.getElementById('SymValue').value = symbol;
@@ -210,6 +213,7 @@
     if (data && data.data && data.data.length > 0) {
 
         // Changing title value
+        // Changing title value
         document.getElementsByTagName('title')[0].text = `Zerodha-${symbol}`
         
         const closeValues = data.data[0].close.flat();
@@ -217,7 +221,7 @@
         const lowValues = data.data[0].low.flat();
         const openValues = data.data[0].open.flat();
         const dates = data.data[0].x;
-        
+
         // selecting graph type
         const graphType = document.getElementById('graph-type').value
 
@@ -284,7 +288,7 @@
     }
     })
     .catch(error => {
-    console.error('Error fetching stock graph:', error);
+    console.error('Error fetching stock graph,May be due to unexpected Ticker or date range:', error);
     });
 }
 
