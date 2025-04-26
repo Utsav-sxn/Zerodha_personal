@@ -25,7 +25,7 @@ def generate_stock_graph(request,symbol,start='2024-10-20',end='2024-12-20'):
 
 
 def chatBot(request,question):
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key="API_KEY")
     try:
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
